@@ -1,0 +1,47 @@
+# Gradle
+.gradle/
+build/
+app/build/
+*/build/
+
+# Local files
+local.properties
+
+# IDEA/Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/gradle.xml
+.idea/dictionaries/
+.idea/httpRequests/
+
+# Keystore
+*.jks
+*.keystore
+
+# Log files
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# APKs, outputs
+*.apk
+*.ap_
+*.dex
+*.class
+output-metadata.json
+
+# Android/C++
+.cxx/
+.externalNativeBuild/
+
+# Misc
+captures/
+*.aab
