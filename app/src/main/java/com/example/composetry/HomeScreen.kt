@@ -19,17 +19,16 @@ fun HomeScreen(
 ) {
     val counterValue = click.value
     Log.d("TEST", "RRRRR")
-    Row {
+    Row(
+        modifier = Modifier.clickable(onClick = onCounterClick)) {
         Text(
             "sdf",
             fontSize = 99.sp,
-            modifier = Modifier.clickable(onClick = onCounterClick)
         )
         
         Text(
             "${counterValue}",
-            fontSize = 99.sp,
-            modifier = Modifier.clickable(onClick = onCounterClick)
+            fontSize = 99.sp
         )
     }
 
