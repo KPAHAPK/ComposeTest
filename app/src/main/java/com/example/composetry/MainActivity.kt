@@ -6,17 +6,29 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.State
 import androidx.compose.runtime.asIntState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val count = mutableStateOf(0)
+        val count = mutableIntStateOf(0)
+        val checked = mutableStateOf(false)
+        val text = mutableStateOf("false")
         setContent {
-            HomeScreen(count) {
-                count.value++
-            }
+            HomeScreen(
+                count,
+                { count.value++ },
+                checked,
+                {
+                    println(it)
+                    checked.value = !checked.value
+                    if (checked.value) {
+                        count.value++
+                    }
+                }, text,
+                {newText -> text.value = newText })
         }
     }
 }
