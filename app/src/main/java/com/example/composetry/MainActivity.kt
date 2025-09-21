@@ -13,10 +13,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val count = mutableStateOf(0)
+        val checked = mutableStateOf(false)
+        val text = mutableStateOf("false")
         setContent {
-            HomeScreen(count) {
-                count.value++
-            }
+            HomeScreen(
+                count,
+                { count.value++ },
+                checked,
+                {
+                    println(it)
+                    checked.value = !checked.value
+                    if (checked.value) {
+                        count.value++
+                    }
+                }, text,
+                {newText -> text.value = newText })
         }
     }
 }
