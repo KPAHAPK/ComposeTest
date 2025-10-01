@@ -29,40 +29,36 @@ fun HomeScreen(
     onTextChange: (String) -> Unit
 ) {
     val counterValue = click.value
-    val checkedValue = checked.value
-    val textValue = text.value
     Log.d("TEST", "RRRRR")
     Column {
-        Row(
-            modifier = Modifier.clickable(onClick = onCounterClick)
-        ) {
-            Text(
-                "sdf",
-                fontSize = 99.sp,
-            )
-
-            Text(
-                "${counterValue}",
-                fontSize = 99.sp
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(checked = checkedValue, onCheckedChange = onCheckedChange)
-            Text(
-                textValue,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-                    .clickable(onClick = {onCheckedChange(!checkedValue)})
-            )
-        }
-        OutlinedTextField(
-            textValue,
-            onValueChange = onTextChange)
+        ClickCounter(counterValue, onCounterClick)
+        InfoText(text = if (counterValue %3 == 0) "More" else "Enough")
     }
+
+}
+
+@Composable
+fun ClickCounter(counter: Int, onCounterClick:() -> Unit){
+    Log.d("TEST", "ClickCounter $counter")
+    Row(
+        modifier = Modifier.clickable(onClick = onCounterClick)
+    ) {
+        Text(
+            "sdf",
+            fontSize = 99.sp,
+        )
+
+        Text(
+            "${counter}",
+            fontSize = 99.sp
+        )
+    }
+}
+
+@Composable
+fun InfoText(text: String) {
+    Log.d("TEST", "InfoText $text")
+    Text(text = text, fontSize = 24.sp)
 }
 
 @Preview
