@@ -1,23 +1,26 @@
 package com.example.composetry
 
 import android.util.Log
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Checkbox
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -29,54 +32,51 @@ fun HomeScreen(
     text: State<String>,
     onTextChange: (String) -> Unit
 ) {
-    val counterValue = click.value
-    var checked by remember { mutableStateOf(false)}
-    Log.d("TAG", "checkedValue: $checked")
-    Column(
+    val list = remember {
+        List(20){"Item $it"}.toMutableList()
+    }
+    val scrollState = rememberScrollState()
+    Row(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
     ) {
-//        ClickCounter(counterValue, onCounterClick, checkedValue)
-        Row(modifier = Modifier.clickable(onClick = { checked = !checked })) {
-            Checkbox(checked = checked, onCheckedChange = { checked = !checked })
-            Text("More details", fontSize = 18.sp)
+        TextButton(onClick = {
+            Log.d("TAG", "----append----")
+            list.add("Item${list.size + 1}")
+
+        }) { Text(text = "Append") }
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(width = 1.dp, color = Color.Black),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(list) { item ->
+                key(item){
+                    SomeItem(item)
+                }
+            }
         }
-        if (checked){
-            Text(text = "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
-        }
+
     }
 
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
-fun ClickCounter(counterValue: Int, onCounterClick: () -> Unit, upperCase: Boolean) {
-    val evenOdd = remember(upperCase) { EvenOdd(upperCase = upperCase) }
+fun SomeItem(text: String) {
+    Log.d("TAG", "SomeItem: $text")
     Text(
-        text = "Clicks: $counterValue ${evenOdd.check(counterValue)}",
+        text = text,
+        fontSize = 18.sp,
         modifier = Modifier
-            .clickable(onClick = onCounterClick)
+            .border(width = 1.dp, color = Color.Black)
+            .padding(16.dp)
     )
-    Log.d("TAG", "ClickCounter(counter = $counterValue, uppercase = $upperCase), $evenOdd")
 }
 
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    val count = mutableStateOf(0)
-    val checked = mutableStateOf(false)
-    val text = mutableStateOf("false")
-    HomeScreen(
-        count,
-        { count.value++ },
-        checked,
-        {
-            println(it)
-            checked.value = !checked.value
-            if (checked.value) {
-                count.value++
-            }
-        }, text,
-        { newText -> text.value = newText })
-}
+
+
