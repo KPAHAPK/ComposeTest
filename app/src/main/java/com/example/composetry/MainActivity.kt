@@ -22,9 +22,6 @@ class MainActivity : ComponentActivity() {
                 {
                     println(it)
                     checked.value = !checked.value
-                    if (checked.value) {
-                        count.value++
-                    }
                 }, text,
                 { newText -> text.value = newText })
         }
