@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,14 +17,7 @@ class MainActivity : ComponentActivity() {
         val text = mutableStateOf("false")
         setContent {
             HomeScreen(
-                count,
-                { count.value++ },
-                checked,
-                {
-                    println(it)
-                    checked.value = !checked.value
-                }, text,
-                { newText -> text.value = newText })
+            )
         }
     }
 }
