@@ -23,29 +23,15 @@ class MainActivity : ComponentActivity() {
                 .fillMaxSize()
                 .statusBarsPadding()) {
                 val navController = rememberNavController()
-
                 NavHost(
                     navController = navController,
-                    startDestination = "userList",
+                    startDestination = "home",
                     modifier = Modifier.weight(1f)
                 ) {
-                    composable("userList") {
-                        UserListScreen(
-                            onUserClick = { navController.navigate("user") },
-                        )
-                    }
-                    composable("user") {
-                        val userListEntry = remember(it) { navController.getBackStackEntry("userList") }
-                        UserScreen(
-                            usersSharedViewModel = viewModel(userListEntry)
-                        )
+                    composable("home") {
+                        HomeScreen()
                     }
                 }
-
-                Text(
-                    text = "Users",
-                    modifier = Modifier.clickable { navController.navigate("userList") }
-                )
             }
         }
     }
