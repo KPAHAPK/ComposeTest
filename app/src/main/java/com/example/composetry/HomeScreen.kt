@@ -1,5 +1,6 @@
 package com.example.composetry
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -13,12 +14,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 
-val LocalFontStyle = compositionLocalOf { FontStyle.Normal }
+data class MyTextStyle(
+    val color: Color = Color.Unspecified,
+    val fontSize: TextUnit = 12.sp,
+    val align: TextAlign = TextAlign.Left
+)
+val LocalFontStyle = compositionLocalOf { MyTextStyle() }
+val TAG = "HomeScreen"
 @Composable
 fun HomeScreen(
 ) {
@@ -32,14 +44,13 @@ fun HomeScreen(
         Checkbox(checked = checked3, onCheckedChange = { checked3 = it })
         MyCheckbox("Italic", italicState)
 
-        val fontStyle = if (italicState.value) FontStyle.Italic else FontStyle.Normal
-        CompositionLocalProvider(LocalFontStyle provides fontStyle) {
+        Log.d(TAG, "HomeScreen ${italicState.value}")
+
+        val color = if (italicState.value) Color.Gray else Color.Green
+        CompositionLocalProvider(LocalFontStyle provides MyTextStyle(color)) {
             MyText(text = "Text 1")
-            MyText(text = "Text 2")
-            MyText(text = "Text 3")
-            MyText(text = "Text 4")
+            Test()
         }
-        MyText(text = "Text 5")
     }
 }
 
@@ -52,8 +63,15 @@ fun MyCheckbox(text: String, checked: MutableState<Boolean>) {
 }
 
 @Composable
+fun Test() {
+    Log.d(TAG, "Test")
+    Text(text = "Test")
+}
+
+@Composable
 fun MyText(text: String) {
-    Text(text = text, fontStyle = LocalFontStyle.current)
+    Log.d(TAG, "MyText")
+    Text(text = text, color = LocalFontStyle.current.color)
 }
 
 @Preview(showBackground = true)
