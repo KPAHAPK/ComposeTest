@@ -3,13 +3,18 @@ package com.example.composetry.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -50,9 +55,18 @@ fun ComposeTryTheme(
         else -> LightColorScheme
     }
 
+    val Shapes = Shapes(
+        extraSmall = RoundedCornerShape(topStart = 20.dp),
+        small = RoundedCornerShape(topStart = 20.dp),
+        medium = RoundedCornerShape(topStart = 20.dp),
+        large = RoundedCornerShape(topStart = 20.dp),
+        extraLarge = RoundedCornerShape(topStart = 20.dp)
+    )
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
+        shapes = Shapes
     )
 }
