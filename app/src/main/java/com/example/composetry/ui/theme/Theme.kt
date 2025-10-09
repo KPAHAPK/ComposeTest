@@ -42,7 +42,7 @@ private val LightColorScheme = lightColorScheme(
 fun ComposeTryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false,
+    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -67,6 +67,5 @@ fun ComposeTryTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content,
-        shapes = Shapes
     )
 }

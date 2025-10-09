@@ -1,95 +1,127 @@
 package com.example.composetry
 
-import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.foundation.shape.GenericShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ShapeDefaults
-import androidx.compose.material3.Shapes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Measurable
+import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.constrainHeight
+import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composetry.ui.theme.ComposeTryTheme
 
-data class MyTextStyle(
-    val color: Color = Color.Unspecified,
-    val fontSize: TextUnit = 12.sp,
-    val align: TextAlign = TextAlign.Left
-)
+enum class Position {
+    END, PARALLEL
+}
 
-val LocalFontStyle = compositionLocalOf { MyTextStyle() }
-val TAG = "HomeScreen"
+class PositionParentData(
+    val position: Position,
+) : ParentDataModifier {
+    override fun Density.modifyParentData(parentData: Any?): Any? {
+        return this@PositionParentData
+    }
+}
 
+fun Modifier.position(position: Position) = this.then(PositionParentData(position))
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
 ) {
-    Column(modifier = Modifier.statusBarsPadding()) {
-        var checked1 by remember { mutableStateOf(false) }
-        var checked2 by remember { mutableStateOf(false) }
-        var checked3 by remember { mutableStateOf(false) }
-        val italicState = remember { mutableStateOf(false) }
-        Checkbox(checked = checked1, onCheckedChange = { checked1 = it })
-        Checkbox(checked = checked2, onCheckedChange = { checked2 = it })
-        Checkbox(checked = checked3, onCheckedChange = { checked3 = it })
-        MyCheckbox("Italic", italicState)
+//    MyColumn(
+//        modifier = Modifier
+//            .height(150.dp)
+//            .background(Color.Gray)
+//    ) {
+//        Text("asdfasd")
+//        Text("asdfasddddd")
+//        Text("asdfasd")
+//        Text("asdfasd")
+//    }
+    Timeline {
+        Text("Task 1")
+        Text("Task 2", modifier = Modifier.position(Position.PARALLEL))
+        Text("Task 3")
+        Text("Task 4")
+        Text("Task 5", modifier = Modifier.position(Position.END))
 
-        Button(onClick = {},
+        Text("Task 6")
+        Text("Task 7", modifier = Modifier.position(Position.PARALLEL))
+        Text("Task 8", modifier = Modifier.position(Position.PARALLEL))
+        Text("Task 9")
+        Text("Task 10")
+    }
+}
+
+@Composable
+fun MyColumn(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+        val childConstraings = constraints.copy(minHeight = 0, minWidth = 0)
+        val placebales = measurables.map { measurable ->
+            measurable.measure(childConstraings)
+        }
+        layout(
+            constraints.constrainWidth(placebales.maxOf { it.width }),
+            constraints.constrainHeight(placebales.sumOf { it.height })
         ) {
-            Text("fasdfdf")
+            var y = 0
+            placebales.forEach { placebale ->
+                placebale.placeRelative(0, y)
+                y += placebale.height
+            }
         }
-
-        Log.d(TAG, "HomeScreen ${italicState.value}")
-        val color = if (italicState.value) Color.Gray else Color.Green
-        CompositionLocalProvider(LocalFontStyle provides MyTextStyle(color)) {
-            MyText(text = "Text 1")
-            Test()
-        }
-        TextField(value = "faffasd", onValueChange = {})
     }
 }
 
 @Composable
-fun MyCheckbox(text: String, checked: MutableState<Boolean>) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(checked = checked.value, onCheckedChange = { checked.value = it })
-        Text(text = text)
+fun Timeline(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+        val placeables = measurables.map { measurable ->
+            measurable.measure(constraints)
+        }
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            var x = 0
+            var y = 0
+            placeables.forEach { placeable ->
+                placeable.placeRelative(x, y)
+                val position = ((placeable as? Measurable)?.parentData as? PositionParentData)?.position
+                when (position){
+                    Position.END -> {
+                        x = 0
+                    }
+                    Position.PARALLEL -> {
+                    }
+                    else -> {
+                        x += placeable.width
+                    }
+                }
+                y += placeable.height
+            }
+        }
     }
-}
-
-@Composable
-fun Test() {
-    Log.d(TAG, "Test")
-    Text(text = "Test")
-}
-
-@Composable
-fun MyText(text: String) {
-    Log.d(TAG, "MyText")
-    Text(text = text, color = LocalFontStyle.current.color)
 }
 
 @Preview(showBackground = true)
